@@ -165,7 +165,7 @@ class TestMqttWriter extends WordSpec with Matchers with BeforeAndAfterAll with 
 
     val config = MqttSinkConfig(props)
     val settings = MqttSinkSettings(config)
-    val writer = MqttWriter(settings)
+    val writer = LivongoMqttWriter(settings)
     val records = getTestRecords
 
     client.subscribe(TARGET)

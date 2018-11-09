@@ -36,7 +36,7 @@ import scala.collection.JavaConversions._
 class MqttSinkTask extends SinkTask with StrictLogging {
   private val progressCounter = new ProgressCounter
   private var enableProgress: Boolean = false
-  private var writer: Option[MqttWriter] = None
+  private var writer: Option[LivongoMqttWriter] = None
   private val manifest = JarManifest(getClass.getProtectionDomain.getCodeSource.getLocation)
 
   override def start(props: util.Map[String, String]): Unit = {
@@ -53,7 +53,7 @@ class MqttSinkTask extends SinkTask with StrictLogging {
       context.timeout(sinkConfig.getInt(MqttConfigConstants.ERROR_RETRY_INTERVAL).toLong)
     }
 
-    writer = Some(MqttWriter(settings))
+    writer = Some(LivongoMqttWriter(settings))
   }
 
   override def put(records: util.Collection[SinkRecord]): Unit = {
