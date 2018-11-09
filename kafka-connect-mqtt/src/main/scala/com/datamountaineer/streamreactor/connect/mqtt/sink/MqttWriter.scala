@@ -71,6 +71,7 @@ class MqttWriter(client: MqttClient, settings: MqttSinkSettings)
         kcqls.map(k => {
           //for all the records in the group transform
           records.map(r => {
+            //Livongo: Instead of using the target in the kcql statement, the "target" field from the message is used.
             val trans = Transform(
               k.getFields.map(FieldConverter.apply),
               k.getIgnoredFields.map(FieldConverter.apply),
@@ -83,6 +84,8 @@ class MqttWriter(client: MqttClient, settings: MqttSinkSettings)
           }).map(
             {
               case (t, jsonString) => {
+                //Livongo: Just the "payload" field is published instead of the full message.
+                //   The "payload" field is expected to be a Base 64 encoded String.
                 val json = parse(jsonString)
                 val payload = (json \ "payload").getAsOrElse("")
                 val asbytes = Base64.getDecoder.decode(payload)
